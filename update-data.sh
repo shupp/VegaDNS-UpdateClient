@@ -45,7 +45,7 @@ NEWSUM=$(sum "$NEW" | awk '{ print $1 " " $2}')
 
 if [ "$OLDSUM" != "$NEWSUM" ]; then
     mv "$NEW" "$CUR"
-    cd "${ROOT}" && make -s
+    cd "${ROOT}" && tinydns-data
 else
     rm "$NEW"
 fi
