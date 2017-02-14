@@ -13,19 +13,19 @@ NEW="${ROOT}/data.new"
 
 
 if [ -f "$CUR" ] ; then
-    cp $CUR $OLD
+    cp "$CUR" "$OLD"
 fi
 
 if [ -f "$NEW" ] ; then
-    rm $NEW
+    rm "$NEW"
 fi
 
-A=$[0]
+A=$((0))
 for VD in $VEGADNS ; do
-    A=$[$A+1]
-    if wget -q -O "${ROOT}/data.srv-$A" $VD ; then
+    A=$((A+1))
+    if wget -q -O "${ROOT}/data.srv-$A" "$VD" ; then
         if [ -s "${ROOT}/data.srv-$A" ] ; then
-            cat "${ROOT}/data.srv-$A" >>$NEW
+            cat "${ROOT}/data.srv-$A" >> "$NEW"
         else
             echo "ERROR: ${ROOT}/data.srv-$A does not have a size greater than zero" 1>&2
             exit 1
@@ -40,15 +40,15 @@ for VD in $VEGADNS ; do
 done
 
 # Don't run make if the files havn't changed
-OLDSUM=$(sum $OLD | awk '{ print $1 " " $2}')
-NEWSUM=$(sum $NEW | awk '{ print $1 " " $2}')
+OLDSUM=$(sum "$OLD" | awk '{ print $1 " " $2}')
+NEWSUM=$(sum "$NEW" | awk '{ print $1 " " $2}')
 
 if [ "$OLDSUM" != "$NEWSUM" ]; then
-    mv $NEW $CUR
-    (cd "${ROOT}" ; make -s)
+    mv "$NEW" "$CUR"
+    cd "${ROOT}" && make -s
 else
-    rm $NEW
+    rm "$NEW"
 fi
 
-diff -u $OLD $CUR
+diff -u "$OLD" "$CUR"
 exit 0
