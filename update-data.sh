@@ -51,4 +51,6 @@ else
 fi
 
 diff -u "$OLD" "$CUR"
+
+sleep ${CHECK_DELAY:-0}
 exit 0
