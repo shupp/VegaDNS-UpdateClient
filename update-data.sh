@@ -2,14 +2,14 @@
 
 # The VegaDNS2 tinydns export endpoint
 # Can be a space delimited list of VegaDNS2 servers
-VEGADNS='http://127.0.0.1/1.0/export/tinydns'
+VEGADNS="${API_URL:-http://localhost:5000}/1.0/export/tinydns"
 
 # Path to the tinydns directory
-TINYDNSDIR=/etc/tinydns
+ROOT=${ROOT:-/etc/tinydns/root}
 
-CUR="$TINYDNSDIR/root/data"
-OLD="$TINYDNSDIR/root/data.old"
-NEW="$TINYDNSDIR/root/data.new"
+CUR="${ROOT}/data"
+OLD="${ROOT}/data.old"
+NEW="${ROOT}/data.new"
 
 
 if [ -f "$CUR" ] ; then
@@ -23,19 +23,19 @@ fi
 A=$[0]
 for VD in $VEGADNS ; do
     A=$[$A+1]
-    if wget -q -O "$TINYDNSDIR/root/data.srv-$A" $VD ; then
-        if [ -s "$TINYDNSDIR/root/data.srv-$A" ] ; then
-            cat "$TINYDNSDIR/root/data.srv-$A" >>$NEW
+    if wget -q -O "${ROOT}/data.srv-$A" $VD ; then
+        if [ -s "${ROOT}/data.srv-$A" ] ; then
+            cat "${ROOT}/data.srv-$A" >>$NEW
         else
-            echo "ERROR: $TINYDNSDIR/root/data.srv-$A does not have a size greater than zero" 1>&2
+            echo "ERROR: ${ROOT}/data.srv-$A does not have a size greater than zero" 1>&2
             exit 1
         fi
     else
         echo "ERROR: wget did not return 0 when accessing $VD" 1>&2
         exit 1
     fi
-    if [ -f "$TINYDNSDIR/root/data.srv-$A" ] ; then
-        rm "$TINYDNSDIR/root/data.srv-$A"
+    if [ -f "${ROOT}/data.srv-$A" ] ; then
+        rm "${ROOT}/data.srv-$A"
     fi
 done
 
@@ -45,7 +45,7 @@ NEWSUM=$(sum $NEW | awk '{ print $1 " " $2}')
 
 if [ "$OLDSUM" != "$NEWSUM" ]; then
     mv $NEW $CUR
-    (cd $TINYDNSDIR/root ; make -s)
+    (cd "${ROOT}" ; make -s)
 else
     rm $NEW
 fi
