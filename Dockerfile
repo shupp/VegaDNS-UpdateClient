@@ -1,6 +1,6 @@
-FROM alpine:latest
+FROM ubuntu:xenial
 
-RUN apk --update add tinydns runit
+RUN apt-get update && apt-get install -y dbndns runit
 
 ADD update-data.sh /etc/service/update-data/run
 ADD tinydns-run.sh /etc/service/tinydns/run
