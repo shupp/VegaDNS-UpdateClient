@@ -1,7 +1,10 @@
 FROM ubuntu:xenial
 
-RUN apt-get update && apt-get install -y dbndns runit wget python python-pip
-RUN pip install redis
+RUN apt-get update && apt-get install -y dbndns runit wget python python-pip \
+    && pip install redis \
+    && apt-get purge -y --auto-remove dpkg-dev libc-dev-bin libc6-dev libexpat1-dev \
+       libgcc-5-dev libpython-all-dev libpython-dev libpython2.7-dev libstdc++-5-dev \
+       linux-libc-dev manpages-dev python-all-dev python-dev python2.7-dev
 
 ADD update-data.sh /etc/update-data.sh
 ADD tinydns-run.sh /etc/service/tinydns/run
