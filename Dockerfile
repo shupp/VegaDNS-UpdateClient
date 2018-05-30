@@ -18,6 +18,7 @@ ADD tinydns-run.sh /etc/service/tinydns/run
 ADD consul-template.in.tpl /etc/consul-template.in.tpl
 ADD consul-template-real-time.sh /etc/service/consul-template-real-time/run
 ADD consul-lock-periodic.sh /etc/service/consul-lock-periodic/run
+ADD consul-lock-update-data.sh /etc/consul-lock-update-data.sh
 ADD entrypoint.sh /entrypoint.sh
 
 ENV ROOT="/etc/tinydns" IP="0.0.0.0" UID="0" GID="0"
